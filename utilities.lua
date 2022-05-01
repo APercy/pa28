@@ -797,6 +797,12 @@ function pa28.flightstep(self)
         self._flap = false
     end
 
+    if self._engine_running == true then
+        self.lights:set_properties({textures={"pa28_l_light.png^pa28_l_light.png","pa28_l_light.png","pa28_r_light.png"},glow=15})
+    else
+        self.lights:set_properties({textures={"pa28_l_light.png","pa28_l_light.png","pa28_r_light.png"},glow=0})
+    end
+
 
     -- calculate energy consumption --
     pa28.consumptionCalc(self, accel)

@@ -6,6 +6,58 @@ dofile(minetest.get_modpath("pa28") .. DIR_DELIM .. "global_definitions.lua")
 
 pa28.vector_up = vector.new(0, 1, 0)
 
+minetest.register_entity('pa28:p_lights',{
+initial_properties = {
+	physical = false,
+	collide_with_objects=false,
+	pointable=false,
+    glow = 0,
+	visual = "mesh",
+	mesh = "pa28_lights.b3d",
+    textures = {
+                    "pa28_l_light.png", --luz posicao
+                    "pa28_l_light.png", --luz posicao esq
+                    "pa28_r_light.png", --luz posicao dir
+        },
+	},
+
+    on_activate = function(self,std)
+	    self.sdata = minetest.deserialize(std) or {}
+	    if self.sdata.remove then self.object:remove() end
+    end,
+	    
+    get_staticdata=function(self)
+      self.sdata.remove=true
+      return minetest.serialize(self.sdata)
+    end,
+	
+})
+
+minetest.register_entity('pa28:light',{
+initial_properties = {
+	physical = false,
+	collide_with_objects=false,
+	pointable=false,
+    glow = 0,
+	visual = "mesh",
+	mesh = "pa28_light.b3d",
+    textures = {
+                    "pa28_metal.png",
+        },
+	},
+
+    on_activate = function(self,std)
+	    self.sdata = minetest.deserialize(std) or {}
+	    if self.sdata.remove then self.object:remove() end
+    end,
+	    
+    get_staticdata=function(self)
+      self.sdata.remove=true
+      return minetest.serialize(self.sdata)
+    end,
+	
+})
+
 minetest.register_entity('pa28:engine',{
 initial_properties = {
 	physical = false,
@@ -73,19 +125,15 @@ minetest.register_entity("pa28:pa28", {
                     "pa28_white.png", --superficies controle
                     "pa28_painting.png", --topo leme
                     "pa28_black.png", --manches
-                    "pa28_l_light.png", --luz posicao
                     "pa28_white.png", --topo fuselagem
                     "pa28_painting.png", --fuselagem
                     "pa28_black.png", --motor
                     "pa28_glass.png", --motor
                     "pa28_interior.png", --fuselagem
-                    "pa28_l_light.png", --luz posicao esq
                     "pa28_black.png", --painel topo
                     "pa28_black.png", --painel fundo
                     "pa28_panel.png", --painel
-                    "pa28_metal.png", --farol
                     "pa28_compass_ind.png", --compass plane
-                    "pa28_r_light.png", --luz posicao dir
                     "pa28_white.png", --topo carenagens
                     "pa28_painting.png", --carenagens
                     "pa28_metal.png", --suporte trem frontal
@@ -180,6 +228,14 @@ minetest.register_entity("pa28:pa28", {
         self.object:set_animation({x = 1, y = 12}, 0, 0, true)
 
         local pos = self.object:get_pos()
+
+        local lights=minetest.add_entity(pos,'pa28:p_lights')
+        lights:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
+        self.lights = lights
+
+        local light=minetest.add_entity(pos,'pa28:light')
+        light:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
+        self.light = light
 
 	    local engine=minetest.add_entity(pos,'pa28:engine')
 	    engine:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
