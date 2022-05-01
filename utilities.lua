@@ -542,6 +542,24 @@ function pa28.flightstep(self)
 
     local is_attached = pa28.checkAttach(self, player)
 
+    --landing light
+    self._last_light_move = self._last_light_move + self.dtime
+    if self._last_light_move > 0.15 then
+        self._last_light_move = 0
+        if self._land_light == true and is_attached then
+            self._light_active_time = self._light_active_time + self.dtime
+            --minetest.chat_send_all(self._light_active_time)
+            if self._light_active_time > 24 then self._land_light = false end
+            self.light:set_properties({textures={"pa28_landing_light.png"},glow=15})
+            airutils.put_light(self)
+        else
+            self._land_light = false
+            self._light_active_time = 0
+            self.light:set_properties({textures={"pa28_metal.png"},glow=0})
+            airutils.remove_light(self)
+        end
+    end
+
     --ajustar angulo de ataque
     local percentage = math.abs(((longit_speed * 100)/(pa28.min_speed + 5))/100)
     if percentage > 1.5 then percentage = 1.5 end
@@ -564,9 +582,8 @@ function pa28.flightstep(self)
 
 
     -- adjust pitch at ground
-    -- adjust pitch at ground
     local tail_lift_min_speed = 2
-    local tail_lift_max_speed = 4
+    local tail_lift_max_speed = 6
     local tail_angle = 0
     if math.abs(longit_speed) > tail_lift_min_speed then
         if math.abs(longit_speed) < tail_lift_max_speed then

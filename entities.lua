@@ -112,7 +112,7 @@ minetest.register_entity("pa28:pa28", {
 	    physical = true,
         collide_with_objects = true,
 	    collisionbox = {-1.2, -1.5, -1.2, 1.2, 1, 1.2}, --{-1,0,-1, 1,0.3,1},
-	    selectionbox = {-2, -1.5, -2, 2, 0, 2},
+	    selectionbox = {-2, -1, -2, 2, 1.2, 2},
 	    visual = "mesh",
 	    mesh = "pa28.b3d",
         stepheight = 0.5,
@@ -181,6 +181,9 @@ minetest.register_entity("pa28:pa28", {
     _last_accell = {x=0,y=0,z=0},
     _last_time_command = 1,
     _wing_configuration = pa28.wing_angle_of_attack,
+    _land_light = false;
+    _last_light_move = 0;
+    _light_active_time = 0;
     _inv = nil,
     _inv_id = "",
 
