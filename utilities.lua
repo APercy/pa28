@@ -576,23 +576,17 @@ function pa28.flightstep(self)
 
 
     -- adjust pitch at ground
-    local tail_lift_min_speed = 2
-    local tail_lift_max_speed = 6
-    local tail_angle = 0
-    if math.abs(longit_speed) > tail_lift_min_speed and is_flying == false then
-        if math.abs(longit_speed) < tail_lift_max_speed then
-            --minetest.chat_send_all(math.abs(longit_speed))
-            local speed_range = tail_lift_max_speed - tail_lift_min_speed
-            percentage = 1-((math.abs(longit_speed) - tail_lift_min_speed)/speed_range)
-            if percentage > 1 then percentage = 1 end
-            if percentage < 0 then percentage = 0 end
-            local angle = tail_angle * percentage
-            local calculated_newpitch = math.rad(angle)
-            if newpitch < calculated_newpitch then newpitch = calculated_newpitch end --ja aproveita o pitch atual se ja estiver cerrto
-            if newpitch > math.rad(tail_angle) then newpitch = math.rad(tail_angle) end --não queremos arrastar o cauda no chão
+    if is_flying == false and longit_speed ~= 0 then
+        if newpitch < 0 then newpitch = 0 end
+
+        local min_speed = 4
+        if longit_speed < min_speed then
+            if newpitch > 0 then
+                local percentage = ((longit_speed * 100)/min_speed)/100
+                newpitch = newpitch * percentage
+                if newpitch < 0 then newpitch = 0 end
+            end
         end
-    else
-        if math.abs(longit_speed) < tail_lift_min_speed then newpitch = math.rad(tail_angle) end
     end
 
     -- new yaw
