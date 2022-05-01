@@ -7,7 +7,7 @@ pa28.min_speed = 6
 pa28.max_speed = 9
 pa28.max_engine_acc = 8.5
 pa28.lift = 10
-pa28.trunk_slots = 18
+pa28.trunk_slots = 16
 pa28.plane_text = "PA28"
 
 dofile(minetest.get_modpath("pa28") .. DIR_DELIM .. "global_definitions.lua")
