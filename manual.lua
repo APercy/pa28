@@ -56,25 +56,26 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local text = {
 				"The Panel \n\n",
 				"In front of the pilot is the instrument panel. \n",
-				"It's used to obtain important flight information, namely: \n",
-				"rate of climb/descent, speed, power applied and fuel level. \n\n",
+				"It's used to obtain important flight information. \n",
 				"The climber is the instrument that indicates the rate \n",
-                "    of climb and descent, it's on the left of the panel, \n",
-                "    marked with the letter C in blue. \n",
-				"The speed indicator indicates the longitudinal speed of the \n",
-                "    aircraft. It's on the center of the panel and is marked \n",
-                "    with the letter S in white. \n",
-				"The power gauge indicates the power applied to the engine. \n",
-				"It's at upper right position of the panel, with an yellow P. \n",
-				"The fuel gauge, located on the right and below, indicates the \n",
-				"fuel available on the aircraft. It's marked with the green F."
+                "    of climb and descent, it's on the left of the \n",
+                "    panel, marked with the letter C in blue. \n",
+				"The speed indicator indicates the longitudinal speed of \n",
+                "    the airplane. Is marked with the letter S in white. \n",
+				"The power gauge indicates the power applied to the \n",
+				"    engine, marked with a P. \n",
+				"The fuel gauge, indicates the fuel available. \n",
+				"     It's marked with the green F.\n",
+				"The altimeter, with values multiplied by 100, \n",
+				"    indicates the current height. \n",
+                "At Panel center you see the compass, used for navigation."
 			}
 			local panel_form = table.concat({
 				"formspec_version[3]",
 				"size[16,10]",
 				"background[-0.7,-0.5;17.5,11.5;pa28_manual_bg.png]",
-				"image[0.2,1.75;7,7;pa28_manual_panel.png]",
-				"label[9.25,0.5;", table.concat(text, ""), "]",
+				"image[0.2,1.75;7,5;pa28_manual_panel.png]",
+				"label[8.5,0.5;", table.concat(text, ""), "]",
 			}, "")
 			minetest.show_formspec(player:get_player_name(), "pa28:manual_panel", panel_form)
 		end
@@ -83,12 +84,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				"Fuel \n\n",
 				"To fly, the aircraft needs fuel for its engine. So it is \n",
 				"necessary to supply it. To do this, it is necessary to \n",
-				"have the selected fuel in hand and punch it in the float. \n",
+				"have the selected fuel in hand and punch it to the plane. \n",
 				"Depending on the fuel mod used and which container, a \n",
 				"greater or lesser number of fuel units may be required to \n",
 				"fill the tank. In the case of the Lokrates biofuel mod, \n",
-                "with 10 bottles it is possible to fill the tank. With the \n",
-                "vial, 40 units will be needed. \n",
+                "with 15 bottles it is possible to fill the tank. With the \n",
+                "vial, 60 units will be needed. \n",
                 "Don't forget to check the fuel gauge on the panel."
 			}
 			local fuel_form = table.concat({
@@ -111,15 +112,16 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				"speed within the green range to avoid stalling. To land, \n",
                 "remove all power, but keep the speed at the limit \n",
                 "between the green and white range. \n",
+                "You can use the flaps, but do not exceeed the operational \n",
+                "speed for it, or it will retract. \n",
                 "When you are about to touch the soil, lightly pull \n",
                 "the stick to level and touch it gently. It's possible to \n",
                 "operate with an external camera, activating the HUD. \n",
                 "The autopilot (jump and sneak) only keeps the airplane at the \n",
                 "activation level, limited by power and designed ceiling. \n",
                 "It's possible for a passenger to board the aircraft, just \n",
-                "click the right the plane. But the passenger \n",
-                "will only be able to enter if the pilot has \n",
-                "already boarded."
+                "click the right the plane. But it will only be \n",
+                "able to enter if the pilot has already boarded."
 			}
 			local op_form = table.concat({
 				"formspec_version[3]",

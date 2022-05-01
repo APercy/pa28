@@ -452,7 +452,7 @@ function pa28.flightstep(self)
 
     self._last_time_command = self._last_time_command + self.dtime
 
-    if self._last_time_command > 1 then self._last_time_command = 1 end
+    if self._last_time_command > 1.2 then self._last_time_command = 1.2 end
 
     local player = nil
     if self.driver_name then player = minetest.get_player_by_name(self.driver_name) end
