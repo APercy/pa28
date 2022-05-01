@@ -45,21 +45,20 @@ minetest.register_craftitem("pa28:pa28", {
 --
 
 if minetest.get_modpath("default") then
-    --[[minetest.register_craft({
+    minetest.register_craft({
 	    output = "pa28:wings",
 	    recipe = {
-		    {"wool:white", "farming:string", "wool:white"},
-		    {"group:wood", "group:wood", "group:wood"},
-		    {"wool:white", "default:steel_ingot", "wool:white"},
+		    {"default:tin_ingot", "default:tin_ingot", "default:tin_ingot"},
+		    {"default:steel_ingot", "default:tinblock", "default:steel_ingot"},
 	    }
     })
 
     minetest.register_craft({
 	    output = "pa28:fuselage",
 	    recipe = {
-		    {"default:steel_ingot", "default:diamondblock", "default:steel_ingot"},
-		    {"wool:white", "default:steel_ingot",  "wool:white"},
-		    {"default:steel_ingot", "default:mese_block",   "default:steel_ingot"},
+		    {"default:tin_ingot", "default:diamondblock", "default:tin_ingot"},
+		    {"default:steel_ingot", "default:steel_ingot",  "default:steel_ingot"},
+		    {"default:tin_ingot", "default:mese_block",   "default:tin_ingot"},
 	    }
     })
 
@@ -69,5 +68,5 @@ if minetest.get_modpath("default") then
 			{"pa28:wings",},
 			{"pa28:fuselage",},
 		}
-	})]]--
+	})
 end
