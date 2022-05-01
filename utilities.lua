@@ -564,16 +564,29 @@ function pa28.flightstep(self)
 
 
     -- adjust pitch at ground
-    local tail_lift_min_speed = 4
+    -- adjust pitch at ground
+    local tail_lift_min_speed = 2
+    local tail_lift_max_speed = 4
     local tail_angle = 0
-    if math.abs(longit_speed) < tail_lift_min_speed then
-        newpitch = math.rad(tail_angle)
+    if math.abs(longit_speed) > tail_lift_min_speed then
+        if math.abs(longit_speed) < tail_lift_max_speed then
+            --minetest.chat_send_all(math.abs(longit_speed))
+            local speed_range = tail_lift_max_speed - tail_lift_min_speed
+            percentage = 1-((math.abs(longit_speed) - tail_lift_min_speed)/speed_range)
+            if percentage > 1 then percentage = 1 end
+            if percentage < 0 then percentage = 0 end
+            local angle = tail_angle * percentage
+            local calculated_newpitch = math.rad(angle)
+            if newpitch < calculated_newpitch then newpitch = calculated_newpitch end --ja aproveita o pitch atual se ja estiver cerrto
+            if newpitch > math.rad(tail_angle) then newpitch = math.rad(tail_angle) end --não queremos arrastar o cauda no chão
+        end
+    else
+        if math.abs(longit_speed) < tail_lift_min_speed then newpitch = math.rad(tail_angle) end
     end
-
 
     -- new yaw
 	if math.abs(self._rudder_angle)>1.5 then
-        local turn_rate = math.rad(14)
+        local turn_rate = math.rad(12)
         local yaw_turn = self.dtime * math.rad(self._rudder_angle) * turn_rate *
                 pa28.sign(longit_speed) * math.abs(longit_speed/2)
 		newyaw = yaw + yaw_turn
@@ -777,7 +790,7 @@ function pa28.flightstep(self)
         pa28.flap_off(self)
     end
 
-    if longit_speed > 8.5 and self._flap == true then
+    if longit_speed > 9.5 and self._flap == true then
         if is_attached and self.driver_name then
             minetest.chat_send_player(self.driver_name, core.colorize('#ff0000', " >>> Flap retracted due for overspeed"))
         end
