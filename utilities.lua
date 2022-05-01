@@ -576,7 +576,7 @@ function pa28.flightstep(self)
 
 
     -- adjust pitch at ground
-    if is_flying == false and longit_speed ~= 0 then
+    if is_flying == false then
         if newpitch < 0 then newpitch = 0 end
 
         local min_speed = 4
