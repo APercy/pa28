@@ -579,7 +579,7 @@ function pa28.flightstep(self)
     local tail_lift_min_speed = 2
     local tail_lift_max_speed = 6
     local tail_angle = 0
-    if math.abs(longit_speed) > tail_lift_min_speed then
+    if math.abs(longit_speed) > tail_lift_min_speed and is_flying == false then
         if math.abs(longit_speed) < tail_lift_max_speed then
             --minetest.chat_send_all(math.abs(longit_speed))
             local speed_range = tail_lift_max_speed - tail_lift_min_speed
