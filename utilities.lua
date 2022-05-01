@@ -223,8 +223,8 @@ function pa28.destroy(self)
     if self.engine then self.engine:remove() end
     if self.pilot_seat_base then self.pilot_seat_base:remove() end
     if self.co_pilot_seat_base then self.co_pilot_seat_base:remove() end
-    if self.self._passengers_base[1] then self.self._passengers_base[1]:remove() end
-    if self.self._passengers_base[2] then self.self._passengers_base[2]:remove() end
+    if self._passengers_base[1] then self._passengers_base[1]:remove() end
+    if self._passengers_base[2] then self._passengers_base[2]:remove() end
 
     airutils.destroy_inventory(self)
     self.object:remove()
