@@ -360,7 +360,7 @@ function pa28.engineSoundPlay(self)
         self.sound_handle = minetest.sound_play({name = "pa28_engine"},
             {object = self.object, gain = 2.0,
                 pitch = 0.5 + ((self._power_lever/100)/2),
-                max_hear_distance = 15,
+                max_hear_distance = 32,
                 loop = true,})
     end
 end
