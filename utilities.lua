@@ -553,6 +553,11 @@ function pa28.flightstep(self)
         end
     end
 
+	if not is_attached then
+        -- for some engine error the player can be detached from the machine, so lets set him attached again
+        pa28.checkattachBug(self)
+    end
+
     if longit_speed == 0 and is_flying == false and is_attached == false and self._engine_running == false then
         if pa28.mode == 1 then self.object:set_velocity(vector.add(velocity, {x=0,y=mobkit.gravity * self.dtime,z=0})) end
         return
@@ -627,11 +632,6 @@ function pa28.flightstep(self)
 
     ---------------------------------
     -- end roll
-
-	if not is_attached then
-        -- for some engine error the player can be detached from the machine, so lets set him attached again
-        pa28.checkattachBug(self)
-    end
 
     local pilot = player
     if self._command_is_given and passenger then
