@@ -338,7 +338,7 @@ minetest.register_entity("pa28:pa28", {
 		end
         
         local is_attached = false
-        if puncher:get_attach() == self.object then is_attached = true end
+        if puncher:get_attach() == self.pilot_seat_base then is_attached = true end
 
         local itmstck=puncher:get_wielded_item()
         local item_name = ""
@@ -350,7 +350,7 @@ minetest.register_entity("pa28:pa28", {
             end
 
             --repair
-            if (item_name == "airutils:repair_tool" or item_name == "trike:repair_tool")
+            if (item_name == "airutils:repair_tool")
                     and self._engine_running == false  then
                 if self.hp_max < 50 then
                     local inventory_item = "default:steel_ingot"
@@ -392,7 +392,6 @@ minetest.register_entity("pa28:pa28", {
             if self.hp_max <= 0 then
                 pa28.destroy(self)
             end
-
         end
         
 	end,
@@ -430,7 +429,17 @@ minetest.register_entity("pa28:pa28", {
         end
         if name == self.driver_name then
             if is_attached then
-                pa28.pilot_formspec(name)
+                local itmstck=clicker:get_wielded_item()
+                local item_name = ""
+                if itmstck then item_name = itmstck:get_name() end
+                if (item_name == "compassgps:cgpsmap_marked") then
+                    local meta = minetest.deserialize(itmstck:get_metadata())
+                    if meta then
+                        self._adf_destiny = {x=meta["x"], z=meta["z"]}
+                    end
+                else
+                    pa28.pilot_formspec(name)
+                end
             else
                 self.driver_name = nil
             end
