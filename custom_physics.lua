@@ -38,11 +38,6 @@ function pa28.physics(self)
 		self.object:set_velocity(vnew)
 	end
 
-    if pa28.mode == 1 then
-        local new_velocity = vector.add(vel, {x=0,y=mobkit.gravity * self.dtime,z=0})
-        self.object:set_velocity(new_velocity)
-    end
-
     if pa28.mode == 2 then
         self.object:set_acceleration({x=0,y=mobkit.gravity,z=0})
     end

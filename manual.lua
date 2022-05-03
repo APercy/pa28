@@ -37,9 +37,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                 "* Forward: go down flying - nose down \n",
                 "* Left/right: Turn to left/right, work on and out ground. \n",
                 "* Left and Right together: center all commands \n",
-                "* Sneak and Jump together (normal): activates the autopilot \n",
-                "* Sneak and Jump together (instruction mode): give/take the \n",
-                "      controls to/from pilot student \n",
+                "* Sneak and Jump together: activates the autopilot \n",
+                "* Aux1 (E) and Jump together: give/take the \n",
+                "      controls to/from copilot \n",
                 "* Up and Down together: enable/disable HUD \n",
                 "* E and Right click: inventory (only external) \n"
 			}
@@ -58,8 +58,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				"In front of the pilot is the instrument panel. \n",
 				"It's used to obtain important flight information. \n",
 				"The climber is the instrument that indicates the rate \n",
-                "    of climb and descent, it's on the left of the \n",
-                "    panel, marked with the letter C in blue. \n",
+                "    of climb or descent, marked with the letter C in blue. \n",
 				"The speed indicator indicates the longitudinal speed of \n",
                 "    the airplane. Is marked with the letter S in white. \n",
 				"The power gauge indicates the power applied to the \n",
@@ -68,7 +67,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				"     It's marked with the green F.\n",
 				"The altimeter, with values multiplied by 100, \n",
 				"    indicates the current height. \n",
-                "At Panel center you see the compass, used for navigation."
+                "At Panel center you see the compass, used for navigation.\n",
+                "    The compass have a second function as Automatic \n",
+                "    direction finding (ADF). It can be activated through \n",
+                "    the plane menu, checking it and setting the \n",
+                "    destination coordinates."
 			}
 			local panel_form = table.concat({
 				"formspec_version[3]",

@@ -171,9 +171,7 @@ minetest.register_entity("pa28:pa28", {
     _energy = 0.001,
     _last_vel = {x=0,y=0,z=0},
     _longit_speed = 0,
-    _land_retracted = true,
     _show_hud = false,
-    _instruction_mode = false, --flag to intruction mode
     _command_is_given = false, --flag to mark the "owner" of the commands now
     _autopilot = false,
     _auto_pilot_altitude = 0,

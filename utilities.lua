@@ -457,7 +457,7 @@ function pa28.flightstep(self)
         ---------------------
         -- change the driver
         ---------------------
-        if passenger and self._last_time_command >= 1 and self._instruction_mode == true then
+        if passenger and self._last_time_command >= 1 then
             if self._command_is_given == true then
                 if ctrl.sneak or ctrl.jump or ctrl.up or ctrl.down or ctrl.right or ctrl.left then
                     self._last_time_command = 0
@@ -465,7 +465,7 @@ function pa28.flightstep(self)
                     airutils.transfer_control(self, false)
                 end
             else
-                if ctrl.sneak == true and ctrl.jump == true then
+                if ctrl.aux1 == true and ctrl.jump == true then
                     self._last_time_command = 0
                     --trasnfer the control to student
                     airutils.transfer_control(self, true)
@@ -475,7 +475,7 @@ function pa28.flightstep(self)
         -----------
         --autopilot
         -----------
-        if self._instruction_mode == false and self._last_time_command >= 1 then
+        if self._last_time_command >= 1 then
             if self._autopilot == true then
                 if ctrl.sneak or ctrl.jump or ctrl.up or ctrl.down or ctrl.right or ctrl.left then
                     self._last_time_command = 0
@@ -554,6 +554,7 @@ function pa28.flightstep(self)
     end
 
     if longit_speed == 0 and is_flying == false and is_attached == false and self._engine_running == false then
+        if pa28.mode == 1 then self.object:set_velocity(vector.add(velocity, {x=0,y=mobkit.gravity * self.dtime,z=0})) end
         return
     end
 
@@ -678,13 +679,17 @@ function pa28.flightstep(self)
     if stop ~= true then --maybe == nil
         self._last_accell = new_accel
 	    self.object:move_to(curr_pos)
-        --self.object:set_velocity(velocity)
+        
+        --solution to avoid rubber band bug
         if player then 
-            pa28.attach(self, player, self._instruction_mode)
+            pa28.attach(self, player, false)
         end
 
         if pa28.mode == 1 then
+            local gravity_velocity = {x=0,y=mobkit.gravity * self.dtime,z=0}
+
             local new_velocity = vector.add(velocity, vector.multiply(new_accel, self.dtime))
+            new_velocity = vector.add(gravity_velocity, new_velocity)
 
             --[[
             new_velocity correction

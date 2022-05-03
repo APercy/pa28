@@ -56,7 +56,7 @@ function pa28.pilot_formspec(name)
     local copilot_name = "test"
 	basic_form = basic_form.."button[1,1.0;4,1;turn_on;Start/Stop Engines]"
     basic_form = basic_form.."button[1,2.0;4,1;hud;Show/Hide Gauges]"
-    --basic_form = basic_form.."button[1,3.0;4,1;turn_auto_pilot_on;Auto Pilot]"
+    basic_form = basic_form.."button[1,3.0;4,1;turn_auto_pilot_on;Auto Pilot]"
     basic_form = basic_form.."button[1,4.0;4,1;pass_control;Pass the Control]"
     basic_form = basic_form.."checkbox[1,5.8;flap_is_down;Flaps down;"..flap_is_down.."]"
     basic_form = basic_form.."checkbox[1,6.6;light;Landing Light;"..light.."]"
@@ -125,7 +125,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                 end
             end
 		    if fields.turn_auto_pilot_on then
-                --
+                ent._autopilot = true
+                minetest.chat_send_player(ent.driver_name,core.colorize('#00ff00', " >>> Autopilot on"))
 		    end
 		    if fields.pass_control then
                 if ent._command_is_given == true then
