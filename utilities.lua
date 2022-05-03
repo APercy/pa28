@@ -699,7 +699,7 @@ function pa28.flightstep(self)
             if new_velocity.z < -max_factor then new_velocity.z = -vel_adjusted end
             if new_velocity.y > max_factor then new_velocity.y = vel_adjusted end
             if new_velocity.y < -max_factor then new_velocity.y = -vel_adjusted end
-            minetest.chat_send_all(dump(new_velocity))
+            --minetest.chat_send_all(dump(new_velocity))
             self.object:set_velocity(new_velocity)
         end
         if pa28.mode == 2 then mobkit.set_acceleration(self.object, new_accel) end
