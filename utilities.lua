@@ -682,7 +682,27 @@ function pa28.flightstep(self)
         if player then 
             pa28.attach(self, player, self._instruction_mode)
         end
-        mobkit.set_acceleration(self.object, new_accel)
+
+        if pa28.mode == 1 then
+            local new_velocity = vector.add(velocity, vector.multiply(new_accel, self.dtime))
+
+            --[[
+            new_velocity correction
+            under some circunstances the velocity exceeds the max value accepted by set_velocity and
+            the game crashes with an overflow, so limiting the max velocity in each axis prevents the crash
+            ]]--
+            local max_factor = 55
+            local vel_adjusted = 40
+            if new_velocity.x > max_factor then new_velocity.x = vel_adjusted end
+            if new_velocity.x < -max_factor then new_velocity.x = -vel_adjusted end
+            if new_velocity.z > max_factor then new_velocity.z = vel_adjusted end
+            if new_velocity.z < -max_factor then new_velocity.z = -vel_adjusted end
+            if new_velocity.y > max_factor then new_velocity.y = vel_adjusted end
+            if new_velocity.y < -max_factor then new_velocity.y = -vel_adjusted end
+            minetest.chat_send_all(dump(new_velocity))
+            self.object:set_velocity(new_velocity)
+        end
+        if pa28.mode == 2 then mobkit.set_acceleration(self.object, new_accel) end
     else
         if stop == true then
             self.object:set_acceleration({x=0,y=0,z=0})
@@ -716,6 +736,7 @@ function pa28.flightstep(self)
 
     --adjust climb indicator
     local climb_rate = velocity.y
+    if self.isonground then climb_rate = 0 end
     if climb_rate > 5 then climb_rate = 5 end
     if climb_rate < -5 then
         climb_rate = -5

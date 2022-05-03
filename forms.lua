@@ -165,14 +165,16 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                 end
             end
             if fields.save_adf then
-                if fields.adf_x then
-                    if tonumber(fields.adf_x, 10) ~= nil then
-                        ent._adf_destiny.x = tonumber(fields.adf_x, 10)
+                if ent._adf_destiny then
+                    if fields.adf_x then
+                        if tonumber(fields.adf_x, 10) ~= nil then
+                            ent._adf_destiny.x = tonumber(fields.adf_x, 10)
+                        end
                     end
-                end
-                if fields.adf_z then
-                    if tonumber(fields.adf_z, 10) ~= nil then
-                        ent._adf_destiny.z = tonumber(fields.adf_z, 10)
+                    if fields.adf_z then
+                        if tonumber(fields.adf_z, 10) ~= nil then
+                            ent._adf_destiny.z = tonumber(fields.adf_z, 10)
+                        end
                     end
                 end
             end
