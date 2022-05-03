@@ -678,7 +678,6 @@ function pa28.flightstep(self)
 
     if stop ~= true then --maybe == nil
         self._last_accell = new_accel
-	    self.object:move_to(curr_pos)
         
         --solution to avoid rubber band bug
         if player then 
@@ -707,7 +706,10 @@ function pa28.flightstep(self)
             --minetest.chat_send_all(dump(new_velocity))
             self.object:set_velocity(new_velocity)
         end
-        if pa28.mode == 2 then mobkit.set_acceleration(self.object, new_accel) end
+        if pa28.mode == 2 then
+            self.object:move_to(curr_pos)
+            mobkit.set_acceleration(self.object, new_accel)
+        end
     else
         if stop == true then
             self.object:set_acceleration({x=0,y=0,z=0})
