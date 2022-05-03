@@ -35,6 +35,23 @@ function pa28.pilot_formspec(name)
     if ent._flap then flap_is_down = "true" end
     local light = "false"
     if ent._land_light then light = "true" end
+    local adf = "false"
+    if ent._adf then adf = "true" end
+    local x, z = 0
+    if ent._adf_destiny then
+        if ent._adf_destiny.x then
+            if type(ent._adf_destiny.x) ~= nil then
+                x = math.floor(ent._adf_destiny.x)
+            end
+        end
+        if ent._adf_destiny.z then
+            if type(ent._adf_destiny.z) ~= nil then
+                z = math.floor(ent._adf_destiny.z)
+            end
+        end
+    else
+        return
+    end
 
     local copilot_name = "test"
 	basic_form = basic_form.."button[1,1.0;4,1;turn_on;Start/Stop Engines]"
@@ -42,10 +59,16 @@ function pa28.pilot_formspec(name)
     --basic_form = basic_form.."button[1,3.0;4,1;turn_auto_pilot_on;Auto Pilot]"
     basic_form = basic_form.."button[1,4.0;4,1;pass_control;Pass the Control]"
     basic_form = basic_form.."checkbox[1,5.8;flap_is_down;Flaps down;"..flap_is_down.."]"
-    basic_form = basic_form.."checkbox[1,6.8;light;Landing Light;"..light.."]"
-    basic_form = basic_form.."button[1,7.8;4,1;go_out;Go Offboard]"
-    basic_form = basic_form.."label[1,10;Bring a copilot:]"
-    basic_form = basic_form.."dropdown[1,10.2;4,1;copilot;"..pass_list..";0;false]"
+    basic_form = basic_form.."checkbox[1,6.6;light;Landing Light;"..light.."]"
+    basic_form = basic_form.."checkbox[1,7.4;adf;Auto Direction Find;"..adf.."]"
+
+    basic_form = basic_form.."field[1,8.0;1.5,0.6;adf_x;pos x;"..x.."]"
+    basic_form = basic_form.."field[2.7,8.0;1.5,0.6;adf_z;pos z;"..z.."]"
+    basic_form = basic_form.."button[4.5,8.0;0.6,0.6;save_adf;OK]"
+
+    basic_form = basic_form.."label[1,9.2;Bring a copilot:]"
+    basic_form = basic_form.."dropdown[1,9.4;4,0.6;copilot;"..pass_list..";0;false]"
+    basic_form = basic_form.."button[1,10.2;4,1;go_out;Go Offboard]"
 
     minetest.show_formspec(name, "pa28:pilot_main", basic_form)
 end
@@ -132,6 +155,25 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                     ent._land_light = false
                 else
                     ent._land_light = true
+                end
+            end
+            if fields.adf then
+                if ent._adf == true then
+                    ent._adf = false
+                else
+                    ent._adf = true
+                end
+            end
+            if fields.save_adf then
+                if fields.adf_x then
+                    if tonumber(fields.adf_x, 10) ~= nil then
+                        ent._adf_destiny.x = tonumber(fields.adf_x, 10)
+                    end
+                end
+                if fields.adf_z then
+                    if tonumber(fields.adf_z, 10) ~= nil then
+                        ent._adf_destiny.z = tonumber(fields.adf_z, 10)
+                    end
                 end
             end
 		    if fields.go_out then

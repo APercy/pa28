@@ -181,9 +181,11 @@ minetest.register_entity("pa28:pa28", {
     _last_accell = {x=0,y=0,z=0},
     _last_time_command = 1,
     _wing_configuration = pa28.wing_angle_of_attack,
-    _land_light = false;
-    _last_light_move = 0;
-    _light_active_time = 0;
+    _land_light = false,
+    _last_light_move = 0,
+    _light_active_time = 0,
+    _adf = false,
+    _adf_destiny = {x=0,z=0},
     _inv = nil,
     _inv_id = "",
 
@@ -200,6 +202,8 @@ minetest.register_entity("pa28:pa28", {
             stored_engine_running = self._engine_running,
             stored_inv_id = self._inv_id,
             stored_flap = self._flap,
+            stored_adf = self._adf,
+            stored_adf_destiny = self._adf_destiny,
         })
     end,
 
@@ -221,6 +225,9 @@ minetest.register_entity("pa28:pa28", {
             self._engine_running = data.stored_engine_running
             self._inv_id = data.stored_inv_id
             self._flap = data.stored_flap
+            self._adf = data.stored_adf
+            self._adf_destiny = data.stored_adf_destiny
+
             --self.sound_handle = data.stored_sound_handle
             --minetest.debug("loaded: ", self._energy)
             if self._engine_running then

@@ -741,7 +741,17 @@ function pa28.flightstep(self)
     self.object:set_bone_position("fuel", {x=0, y=0, z=10.2}, {x=0, y=0, z=-energy_indicator_angle+180})
 
     self.object:set_bone_position("compass", {x=0, y=2.8, z=10.3}, {x=0, y=0, z=-(math.deg(newyaw))})
-    self.object:set_bone_position("compass_plan", {x=0, y=2.8, z=10.25}, {x=0, y=0, z=0})
+    local adf = 0
+    if self._adf == true then
+        if airutils.getAngleFromPositions then
+            adf = airutils.getAngleFromPositions(curr_pos, self._adf_destiny)
+            adf = -(adf + math.deg(newyaw))
+            --minetest.chat_send_all(adf)
+        else
+            minetest.chat_send_player(self.driver_name," >>> Impossible to activate the ADF - the airutils lib is outdated")
+        end
+    end
+    self.object:set_bone_position("compass_plan", {x=0, y=2.8, z=10.25}, {x=0, y=0, z=adf})
 
     --altimeter
     local altitude = (curr_pos.y / 0.32) / 100
