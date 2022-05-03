@@ -250,7 +250,7 @@ function pa28.testImpact(self, velocity, position)
     if self._last_vel == nil then return end
     --lets calculate the vertical speed, to avoid the bug on colliding on floor with hard lag
     if abs(velocity.y - self._last_vel.y) > 2 then
-		local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=-1.52}))
+		local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=-1.5}))
 	    if (noded and noded.drawtype ~= 'airlike') then
 		    collision = true
 	    else
@@ -836,7 +836,7 @@ function pa28.flightstep(self)
 
     if longit_speed > 9.5 and self._flap == true then
         if is_attached and self.driver_name then
-            minetest.chat_send_player(self.driver_name, core.colorize('#ff0000', " >>> Flap retracted due for overspeed"))
+            minetest.chat_send_player(self.driver_name, core.colorize('#ff0000', " >>> Flaps retracted due for overspeed"))
         end
         self._flap = false
     end
@@ -852,7 +852,7 @@ function pa28.flightstep(self)
     pa28.consumptionCalc(self, accel)
 
     --test collision
-    pa28.testImpact(self, velocity, curr_pos)
+    pa28.testImpact(self, self.object:get_velocity(), curr_pos)
 
     --saves last velocity for collision detection (abrupt stop)
     self._last_vel = self.object:get_velocity()
