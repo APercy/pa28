@@ -250,7 +250,7 @@ function pa28.testImpact(self, velocity, position)
     if self._last_vel == nil then return end
     --lets calculate the vertical speed, to avoid the bug on colliding on floor with hard lag
     if abs(velocity.y - self._last_vel.y) > 2 then
-		local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=-2.8}))
+		local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=-1.52}))
 	    if (noded and noded.drawtype ~= 'airlike') then
 		    collision = true
 	    else
