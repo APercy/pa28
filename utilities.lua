@@ -278,8 +278,8 @@ function pa28.testImpact(self, velocity, position)
 		end
     end
 
-    if impact > 1.2  and self._longit_speed > 2 then
-        local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=-2.8}))
+    if impact > 1.2  and self._longit_speed > 3 then
+        local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=-1.5}))
 	    if (noded and noded.drawtype ~= 'airlike') then
             minetest.sound_play("pa28_touch", {
                 --to_player = self.driver_name,
