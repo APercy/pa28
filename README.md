@@ -52,15 +52,16 @@ the airplane is unable to do a tuneau, barrel roll, loopings and any kind of aer
 * Right click: enter in/get off plane
 * Left click (with biofuel): add fuel to plane
 * Right click and Sneak: enter in flight instructor mode (limited vision, so use debug info)
-* E + Shift: flaps
+* Aux1 + Sneak: flaps
 * Jump: Increase power, forward on ground
 * Sneak: Decrease power, brake on ground
 * Backward: go up flying - nose up
 * Forward: go down flying - nose down
 * Left/right: Turn to left/right, work on and out ground.
-* Left and Right together: center all commands
-* Sneak and Jump together: give/take the controls to/from pilot student
-* Up and Down together: enable/disable HUD
+* Left + Right: center all commands
+* Sneak + Jump: autopilot
+* Aux1 + Jump: pass the control to copilot 
+* Up + Down: enable/disable HUD
 
 **Chat Commands: **
 
