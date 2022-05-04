@@ -293,6 +293,10 @@ function pa28.testImpact(self, velocity, position)
             fade = 0.0,
             pitch = 1.0,
         }, true)
+        if damage > 5 then
+            self._power_lever = 0
+            self._engine_running = false
+        end
 
         if self.driver_name then
             local player_name = self.driver_name
