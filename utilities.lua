@@ -262,20 +262,7 @@ function pa28.testImpact(self, velocity, position)
     local impact = abs(pa28.get_hipotenuse_value(velocity, self._last_vel))
     --minetest.chat_send_all('impact: '.. impact .. ' - hp: ' .. self.hp_max)
     if impact > 2 then
-        --minetest.chat_send_all('impact: '.. impact .. ' - hp: ' .. self.hp_max)
-		local nodeu = mobkit.nodeatpos(mobkit.pos_shift(p,{y=1}))
-		local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=-2.8}))
-        local nodel = mobkit.nodeatpos(mobkit.pos_shift(p,{x=-1}))
-        local noder = mobkit.nodeatpos(mobkit.pos_shift(p,{x=1}))
-        local nodef = mobkit.nodeatpos(mobkit.pos_shift(p,{z=1}))
-        local nodeb = mobkit.nodeatpos(mobkit.pos_shift(p,{z=-1}))
-		if (nodeu and nodeu.drawtype ~= 'airlike') or
-            (nodef and nodef.drawtype ~= 'airlike') or
-            (nodeb and nodeb.drawtype ~= 'airlike') or
-            (noder and noder.drawtype ~= 'airlike') or
-            (nodel and nodel.drawtype ~= 'airlike') then
-			collision = true
-		end
+        collision = self.colinfo.collides
     end
 
     if impact > 1.2  and self._longit_speed > 3 then
@@ -294,7 +281,7 @@ function pa28.testImpact(self, velocity, position)
 
     if collision then
         --self.object:set_velocity({x=0,y=0,z=0})
-        local damage = impact / 2
+        local damage = impact -- / 2
         self.hp_max = self.hp_max - damage --subtract the impact value directly to hp meter
         minetest.sound_play("pa28_collision", {
             --to_player = self.driver_name,
