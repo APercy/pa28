@@ -669,7 +669,24 @@ function pa28.flightstep(self)
 
     local new_accel = accel
     if longit_speed > 1.5 then
-        new_accel = airutils.getLiftAccel(self, velocity, new_accel, longit_speed, roll, curr_pos, pa28.lift, 15000, 12) --I added more 3 meters for wingspan to increase the ground effect for the low wing (the wingspan variable is only used for ground effect)
+        --[[lets do something interesting:
+        here I'll fake the longit speed effect for takeoff, to force the airplane
+        to use more runway 
+        ]]--
+        local factorized_longit_speed = longit_speed
+        if is_flying == false and airutils.quadBezier then
+            local takeoff_speed = pa28.min_speed * 4  --so first I'll consider the takeoff speed 4x the minimal flight speed
+            if longit_speed < takeoff_speed and longit_speed > pa28.min_speed then -- then if the airplane is above the mininam speed and bellow the take off
+                local scale = (longit_speed*1)/takeoff_speed --get a scale of current longit speed relative to takeoff speed
+                if scale == nil then scale = 0 end --lets avoid any nil
+                factorized_longit_speed = airutils.quadBezier(scale, pa28.min_speed, longit_speed, longit_speed) --here the magic happens using a bezier curve
+                --minetest.chat_send_all("factor: " .. factorized_longit_speed .. " - longit: " .. longit_speed .. " - scale: " .. scale)
+                if factorized_longit_speed < 0 then factorized_longit_speed = 0 end --lets avoid negative numbers
+                if factorized_longit_speed == nil then factorized_longit_speed = longit_speed end --and nil numbers
+            end
+        end
+        --now gets the lift!
+        new_accel = airutils.getLiftAccel(self, velocity, new_accel, factorized_longit_speed, roll, curr_pos, pa28.lift, 15000, 12) --I added more 3 meters for wingspan to increase the ground effect for the low wing (the wingspan variable is only used for ground effect)
     end
     -- end lift
 
