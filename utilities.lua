@@ -245,12 +245,14 @@ function pa28.destroy(self)
 end
 
 function pa28.testImpact(self, velocity, position)
+    if self._last_accell == nil then return end
     local p = position --self.object:get_pos()
     local collision = false
+    local low_node_pos = -2.0
     if self._last_vel == nil then return end
     --lets calculate the vertical speed, to avoid the bug on colliding on floor with hard lag
     if abs(velocity.y - self._last_vel.y) > 2 then
-		local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=-1.5}))
+		local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=low_node_pos}))
 	    if (noded and noded.drawtype ~= 'airlike') then
 		    collision = true
 	    else
@@ -266,7 +268,7 @@ function pa28.testImpact(self, velocity, position)
     end
 
     if impact > 1.2  and self._longit_speed > 3 then
-        local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=-1.5}))
+        local noded = mobkit.nodeatpos(mobkit.pos_shift(p,{y=low_node_pos}))
 	    if (noded and noded.drawtype ~= 'airlike') then
             minetest.sound_play("pa28_touch", {
                 --to_player = self.driver_name,
@@ -515,7 +517,7 @@ function pa28.flightstep(self)
     local accel = vector.add(longit_drag,later_drag)
     local stop = false
 
-    local node_bellow = mobkit.nodeatpos(mobkit.pos_shift(curr_pos,{y=-1.51}))
+    local node_bellow = mobkit.nodeatpos(mobkit.pos_shift(curr_pos,{y=-2.0}))
     local is_flying = true
     if node_bellow and node_bellow.drawtype ~= 'airlike' then is_flying = false end
     --if is_flying then minetest.chat_send_all('is flying') end
@@ -546,7 +548,10 @@ function pa28.flightstep(self)
     end
 
     if longit_speed == 0 and is_flying == false and is_attached == false and self._engine_running == false then
-        if pa28.mode == 1 then self.object:set_velocity(vector.add(velocity, {x=0,y=mobkit.gravity * self.dtime,z=0})) end
+        if pa28.mode == 1 then
+            self.object:move_to(curr_pos)
+            self.object:set_acceleration({x=0,y=mobkit.gravity,z=0})
+        end
         return
     end
 
@@ -648,6 +653,7 @@ function pa28.flightstep(self)
 
     --lets apply some bob in water
 	if self.isinliquid then
+        self._engine_running = false
         local bob = pa28.minmax(pa28.dot(accel,hull_direction),0.2)	-- vertical bobbing
         accel.y = accel.y + bob
         local max_pitch = 6
@@ -671,28 +677,7 @@ function pa28.flightstep(self)
             pa28.attach(self, player, false)
         end
 
-        if pa28.mode == 1 then
-            local gravity_velocity = {x=0,y=mobkit.gravity * self.dtime,z=0}
-
-            local new_velocity = vector.add(velocity, vector.multiply(new_accel, self.dtime))
-            new_velocity = vector.add(gravity_velocity, new_velocity)
-
-            --[[
-            new_velocity correction
-            under some circunstances the velocity exceeds the max value accepted by set_velocity and
-            the game crashes with an overflow, so limiting the max velocity in each axis prevents the crash
-            ]]--
-            local max_factor = 55
-            local vel_adjusted = 40
-            if new_velocity.x > max_factor then new_velocity.x = vel_adjusted end
-            if new_velocity.x < -max_factor then new_velocity.x = -vel_adjusted end
-            if new_velocity.z > max_factor then new_velocity.z = vel_adjusted end
-            if new_velocity.z < -max_factor then new_velocity.z = -vel_adjusted end
-            if new_velocity.y > max_factor then new_velocity.y = vel_adjusted end
-            if new_velocity.y < -max_factor then new_velocity.y = -vel_adjusted end
-            --minetest.chat_send_all(dump(new_velocity))
-            self.object:set_velocity(new_velocity)
-        end
+        --for mode==1, see at custom_physics
         if pa28.mode == 2 then
             self.object:move_to(curr_pos)
             mobkit.set_acceleration(self.object, new_accel)
@@ -715,9 +700,6 @@ function pa28.flightstep(self)
         --stop wheels
         self.object:set_animation_frame_speed(0)
     end
-
-
-
     ------------------------------------------------------
     -- end accell
     ------------------------------------------------------
@@ -846,4 +828,5 @@ function pa28.flightstep(self)
     --saves last velocity for collision detection (abrupt stop)
     self._last_vel = self.object:get_velocity()
 end
+
 

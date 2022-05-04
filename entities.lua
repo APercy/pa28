@@ -159,6 +159,7 @@ minetest.register_entity("pa28:pa28", {
     show_on_minimap = true,
     springiness = 0.1,
     physics = pa28.physics,
+    buoyancy = 1.02,
     _passenger = nil,
     _color = "#0063b0",
     _rudder_angle = 0,
