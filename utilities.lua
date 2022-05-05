@@ -264,7 +264,9 @@ function pa28.testImpact(self, velocity, position)
     local impact = abs(pa28.get_hipotenuse_value(velocity, self._last_vel))
     --minetest.chat_send_all('impact: '.. impact .. ' - hp: ' .. self.hp_max)
     if impact > 2 then
-        collision = self.colinfo.collides
+        if self.colinfo then
+            collision = self.colinfo.collides
+        end
     end
 
     if impact > 1.2  and self._longit_speed > 3 then
