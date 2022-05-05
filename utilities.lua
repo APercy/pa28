@@ -48,7 +48,7 @@ function pa28.attach(self, player, instructor_mode)
     player_api.player_attached[name] = true
     --player:set_physics_override({gravity = 0})
     -- make the driver sit
-    minetest.after(0.3, function()
+    minetest.after(1, function()
         if player then
             --minetest.chat_send_all("okay")
             player_api.set_animation(player, "sit")
@@ -694,9 +694,9 @@ function pa28.flightstep(self)
         self._last_accell = new_accel
         
         --solution to avoid rubber band bug
-        if player then 
+        --[[if player then 
             pa28.attach(self, player, false)
-        end
+        end]]--
 
         --for mode==1, see at custom_physics
         if pa28.mode == 2 then
