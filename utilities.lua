@@ -244,7 +244,7 @@ function pa28.destroy(self)
     --minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'hidroplane:hidro')
 end
 
-function pa28.testImpact(self, velocity, position)
+function pa28.testDamage(self, velocity, position)
     if self._last_accell == nil then return end
     local p = position --self.object:get_pos()
     local collision = false
@@ -281,6 +281,30 @@ function pa28.testImpact(self, velocity, position)
                 pitch = 1.0,
             }, true)
 	    end
+    end
+
+    --damage by speed
+    if self._last_speed_damage_time == nil then self._last_speed_damage_time = 0 end
+    self._last_speed_damage_time = self._last_speed_damage_time + self.dtime
+    if self._last_speed_damage_time > 2 then self._last_speed_damage_time = 2 end
+    if self._longit_speed > 14.7 and self._last_speed_damage_time >= 2 then
+        self._last_speed_damage_time = 0
+        minetest.sound_play("pa28_collision", {
+            --to_player = self.driver_name,
+            object = self.object,
+            max_hear_distance = 15,
+            gain = 1.0,
+            fade = 0.0,
+            pitch = 1.0,
+        }, true)
+        self.hp_max = self.hp_max - 5
+        if self.driver_name then
+            local player_name = self.driver_name
+            airutils.setText(self, pa28.plane_text)
+        end
+        if self.hp_max < 0 then --if acumulated damage is greater than 50, adieu
+            pa28.destroy(self)
+        end
     end
 
     if collision then
@@ -447,8 +471,9 @@ function pa28.flightstep(self)
     local passenger = nil
     if self._passenger then passenger = minetest.get_player_by_name(self._passenger) end
 
+    local ctrl = nil
     if player then
-        local ctrl = player:get_player_control()
+        ctrl = player:get_player_control()
         ---------------------
         -- change the driver
         ---------------------
@@ -580,7 +605,6 @@ function pa28.flightstep(self)
     local speed_factor = 0
     if longit_speed > pa28.min_speed then speed_factor = (velocity.y * math.rad(1)) end
     local newpitch = math.rad(self._angle_of_attack) + speed_factor
-
 
     -- adjust pitch at ground
     if is_flying == false then
@@ -741,12 +765,28 @@ function pa28.flightstep(self)
         climb_rate = -5
     end
 
+    --in a command compression during a dive, force the control to recover
+    local longit_initial_speed = 13.0
+    --minetest.chat_send_all(longit_speed)
+    if longit_speed > longit_initial_speed and climb_rate < 0 and is_flying then
+        local recover_command = -0.2
+        if ctrl then
+            if not ctrl.up then
+                self._elevator_angle = recover_command
+            end
+        else
+            self._elevator_angle = recover_command
+        end
+    end
+
     --is an stall, force a recover
-    if longit_speed < (pa28.min_speed / 2) and climb_rate < -3.5 and is_flying then
+    if longit_speed < (pa28.min_speed / 2) and climb_rate < -3 and is_flying then
         self._elevator_angle = 0
         self._angle_of_attack = -2
         newpitch = math.rad(self._angle_of_attack)
     end
+
+    --minetest.chat_send_all("speed: "..longit_speed.." - climb: "..climb_rate.." - angle attack: "..self._angle_of_attack.." - elevator:"..self._elevator_angle)
 
     --minetest.chat_send_all('rate '.. climb_rate)
     local climb_angle = pa28.get_gauge_angle(climb_rate)
@@ -845,8 +885,8 @@ function pa28.flightstep(self)
     -- calculate energy consumption --
     pa28.consumptionCalc(self, accel)
 
-    --test collision
-    pa28.testImpact(self, self.object:get_velocity(), curr_pos)
+    --test damage
+    pa28.testDamage(self, self.object:get_velocity(), curr_pos)
 
     --saves last velocity for collision detection (abrupt stop)
     self._last_vel = self.object:get_velocity()

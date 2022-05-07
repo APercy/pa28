@@ -85,3 +85,31 @@ minetest.register_chatcommand("pa28_manual", {
 	end
 })
 
+--[[minetest.register_chatcommand("pa28_up", {
+	params = "",
+	description = "Command for test the PA28, putting 100 blocks up - only works with server priv",
+	privs = {server = true},
+	func = function(name, param)
+        local colorstring = core.colorize('#ff0000', " >>> you are not inside a PA28")
+        local player = minetest.get_player_by_name(name)
+        local attached_to = player:get_attach()
+
+		if attached_to ~= nil then
+            local seat = attached_to:get_attach()
+            if seat ~= nil then
+                local entity = seat:get_luaentity()
+                if entity then
+                    if entity.name == "pa28:pa28" then
+                        local curr_pos = player:get_pos()
+                        curr_pos.y = curr_pos.y + 100
+                        entity.object:move_to(curr_pos)
+                    else
+			            minetest.chat_send_player(name,colorstring)
+                    end
+                end
+            end
+		else
+			minetest.chat_send_player(name,colorstring)
+		end
+	end
+})]]--

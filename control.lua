@@ -200,15 +200,6 @@ function pa28.elevator_auto_correction(self, longit_speed, dtime)
     end
 end
 
---obsolete, will be removed
-function getAdjustFactor(curr_y, desired_y)
-    local max_difference = 0.1
-    local adjust_factor = 0.5
-    local difference = math.abs(curr_y - desired_y)
-    if difference > max_difference then difference = max_difference end
-    return (difference * adjust_factor) / max_difference
-end
-
 function pa28.autopilot(self, dtime, hull_direction, longit_speed, accel, curr_pos)
 
     local retval_accel = accel
@@ -230,7 +221,7 @@ function pa28.autopilot(self, dtime, hull_direction, longit_speed, accel, curr_p
         local engineacc = (self._power_lever * pa28.max_engine_acc) / 100;
         --self.engine:set_animation_frame_speed(60 + self._power_lever)
 
-        local factor = math.abs(climb_rate * 0.1) --getAdjustFactor(curr_pos.y, self._auto_pilot_altitude)
+        local factor = math.abs(climb_rate * 0.1)
         --increase power lever
         if climb_rate > 0.2 then
             pa28.powerAdjust(self, dtime, factor, -1)
