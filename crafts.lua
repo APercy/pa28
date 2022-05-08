@@ -1,15 +1,16 @@
 
--- wing
-minetest.register_craftitem("pa28:wings",{
-	description = "PA28 wings",
-	inventory_image = "pa28_wings.png",
-})
+if not minetest.settings:get_bool('pa28.disable_craftitems') then
+    -- wing
+    minetest.register_craftitem("pa28:wings",{
+	    description = "PA28 wings",
+	    inventory_image = "pa28_wings.png",
+    })
 -- fuselage
-minetest.register_craftitem("pa28:fuselage",{
-	description = "PA28 fuselage",
-	inventory_image = "pa28_fuselage.png",
-})
-
+    minetest.register_craftitem("pa28:fuselage",{
+	    description = "PA28 fuselage",
+	    inventory_image = "pa28_fuselage.png",
+    })
+end
 -- pa28
 minetest.register_craftitem("pa28:pa28", {
 	description = pa28.plane_text,
@@ -44,7 +45,7 @@ minetest.register_craftitem("pa28:pa28", {
 -- crafting
 --
 
-if minetest.get_modpath("default") then
+if not minetest.settings:get_bool('pa28.disable_craftitems') and minetest.get_modpath("default") then
     minetest.register_craft({
 	    output = "pa28:wings",
 	    recipe = {
