@@ -551,7 +551,11 @@ function pa28.flightstep(self)
 
     local node_bellow = mobkit.nodeatpos(mobkit.pos_shift(curr_pos,{y=-2.0}))
     local is_flying = true
-    if node_bellow and node_bellow.drawtype ~= 'airlike' then is_flying = false end
+    if self.colinfo then
+        is_flying = not self.colinfo.touching_ground
+    end
+    --if node_bellow and node_bellow.drawtype ~= 'airlike' then is_flying = false end
+    
     --if is_flying then minetest.chat_send_all('is flying') end
 
     local is_attached = pa28.checkAttach(self, player)
@@ -588,17 +592,19 @@ function pa28.flightstep(self)
     end
 
     --ajustar angulo de ataque
-    local percentage = math.abs(((longit_speed * 100)/(pa28.min_speed + 5))/100)
-    if percentage > 1.5 then percentage = 1.5 end
-    self._angle_of_attack = self._angle_of_attack - ((self._elevator_angle / 20)*percentage)
-    if self._angle_of_attack < -0.5 then
-        self._angle_of_attack = -0.1
-        self._elevator_angle = self._elevator_angle - 0.1
-    end --limiting the negative angle]]--
-    if self._angle_of_attack > 20 then
-        self._angle_of_attack = 20
-        self._elevator_angle = self._elevator_angle + 0.1
-    end --limiting the very high climb angle due to strange behavior]]--
+    if longit_speed then
+        local percentage = math.abs(((longit_speed * 100)/(pa28.min_speed + 5))/100)
+        if percentage > 1.5 then percentage = 1.5 end
+        self._angle_of_attack = self._angle_of_attack - ((self._elevator_angle / 20)*percentage)
+        if self._angle_of_attack < -0.5 then
+            self._angle_of_attack = -0.1
+            self._elevator_angle = self._elevator_angle - 0.1
+        end --limiting the negative angle]]--
+        if self._angle_of_attack > 20 then
+            self._angle_of_attack = 20
+            self._elevator_angle = self._elevator_angle + 0.1
+        end --limiting the very high climb angle due to strange behavior]]--
+    end
 
     --minetest.chat_send_all(self._angle_of_attack)
 

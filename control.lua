@@ -85,7 +85,7 @@ function pa28.control(self, dtime, hull_direction, longit_speed, longit_drag,
                             engineacc = longit_speed * -1
                         end
                     end
-                    if abs(longit_speed) < 0.2 then
+                    if abs(longit_speed) == 0 then
                         stop = true
                     end
                 end
@@ -153,14 +153,15 @@ end
 
 function pa28.set_pitch(self, dir, dtime)
     local pitch_factor = 6
+    local time_factor = dtime
 	if dir == -1 then
         --minetest.chat_send_all("cabrando")
-        if self._elevator_angle > 0 then pitch_factor = pitch_factor * 2 end
-		self._elevator_angle = math.max(self._elevator_angle-pitch_factor*dtime,-pa28.elevator_limit)
+        if self._angle_of_attack > 0 then pitch_factor = pitch_factor * 2 end
+		self._elevator_angle = math.max(self._elevator_angle-pitch_factor*time_factor,-pa28.elevator_limit)
 	elseif dir == 1 then
         --minetest.chat_send_all("picando")
         if self._angle_of_attack < 0 then pitch_factor = 1 end --lets reduce the command power to avoid accidents
-		self._elevator_angle = math.min(self._elevator_angle+pitch_factor*dtime,pa28.elevator_limit)
+		self._elevator_angle = math.min(self._elevator_angle+pitch_factor*time_factor,pa28.elevator_limit)
 	end
 end
 
@@ -187,6 +188,7 @@ function pa28.rudder_auto_correction(self, longit_speed, dtime)
 end
 
 function pa28.elevator_auto_correction(self, longit_speed, dtime)
+    if longit_speed <= 0 then return end
     local factor = 1
     --if self._elevator_angle > -1.5 then factor = -1 end --here is the "compensator" adjusto to keep it stable
     if self._elevator_angle > 0 then factor = -1 end
