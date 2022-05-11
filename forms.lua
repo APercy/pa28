@@ -16,7 +16,7 @@ end
 function pa28.pilot_formspec(name)
     local basic_form = table.concat({
         "formspec_version[5]",
-        "size[6,12]",
+        "size[6,12.6]",
 	}, "")
 
     local player = minetest.get_player_by_name(name)
@@ -53,6 +53,9 @@ function pa28.pilot_formspec(name)
         return
     end
 
+    local yaw = "false"
+    if ent._yaw_by_mouse then yaw = "true" end
+
     local copilot_name = "test"
 	basic_form = basic_form.."button[1,1.0;4,1;turn_on;Start/Stop Engines]"
     basic_form = basic_form.."button[1,2.0;4,1;hud;Show/Hide Gauges]"
@@ -69,6 +72,8 @@ function pa28.pilot_formspec(name)
     basic_form = basic_form.."label[1,9.2;Bring a copilot:]"
     basic_form = basic_form.."dropdown[1,9.4;4,0.6;copilot;"..pass_list..";0;false]"
     basic_form = basic_form.."button[1,10.2;4,1;go_out;Go Offboard]"
+
+    basic_form = basic_form.."checkbox[1,11.5;yaw;Yaw by mouse;"..yaw.."]"
 
     minetest.show_formspec(name, "pa28:pilot_main", basic_form)
 end
@@ -241,6 +246,13 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                     end
                 end
 		    end
+            if fields.yaw then
+                if ent._yaw_by_mouse == true then
+                    ent._yaw_by_mouse = false
+                else
+                    ent._yaw_by_mouse = true
+                end
+            end
         end
         minetest.close_formspec(name, "pa28:pilot_main")
     end

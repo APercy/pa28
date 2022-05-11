@@ -118,8 +118,13 @@ function pa28.control(self, dtime, hull_direction, longit_speed, longit_drag,
 
 		-- yaw
         local yaw_cmd = 0
-        if ctrl.right then yaw_cmd = 1 elseif ctrl.left then yaw_cmd = -1 end
-        pa28.set_yaw(self, yaw_cmd, dtime)
+        if self._yaw_by_mouse == true then
+	        local rot_y = math.deg(player:get_look_horizontal())
+            pa28.set_yaw_by_mouse(self, rot_y)
+        else
+            if ctrl.right then yaw_cmd = 1 elseif ctrl.left then yaw_cmd = -1 end
+            pa28.set_yaw(self, yaw_cmd, dtime)
+        end
 
         --I'm desperate, center all!
         if ctrl.right and ctrl.left then
@@ -145,14 +150,16 @@ function pa28.control(self, dtime, hull_direction, longit_speed, longit_drag,
         else
             pa28.rudder_auto_correction(self, longit_speed, dtime)
         end
-        pa28.elevator_auto_correction(self, longit_speed, dtime)
+        if airutils.elevator_auto_correction then
+            self._elevator_angle = airutils.elevator_auto_correction(self, longit_speed, self.dtime, pa28.max_speed, self._elevator_angle, pa28.elevator_limit, pa28.ideal_step)
+        end
     end
 
     return retval_accel, stop
 end
 
 function pa28.set_pitch(self, dir, dtime)
-    local pitch_factor = 6
+    local pitch_factor = 1
     local time_factor = dtime
 	if dir == -1 then
         --minetest.chat_send_all("cabrando")
@@ -160,18 +167,41 @@ function pa28.set_pitch(self, dir, dtime)
 		self._elevator_angle = math.max(self._elevator_angle-pitch_factor*time_factor,-pa28.elevator_limit)
 	elseif dir == 1 then
         --minetest.chat_send_all("picando")
-        if self._angle_of_attack < 0 then pitch_factor = 1 end --lets reduce the command power to avoid accidents
+        if self._angle_of_attack < 2 then pitch_factor = 0.2 end --lets reduce the command power to avoid accidents
+        --minetest.chat_send_all("picando: "..pitch_factor)
 		self._elevator_angle = math.min(self._elevator_angle+pitch_factor*time_factor,pa28.elevator_limit)
 	end
 end
 
 function pa28.set_yaw(self, dir, dtime)
-    local yaw_factor = 25
+    local yaw_factor = 20
 	if dir == 1 then
 		self._rudder_angle = math.max(self._rudder_angle-(yaw_factor*dtime),-pa28.rudder_limit)
 	elseif dir == -1 then
 		self._rudder_angle = math.min(self._rudder_angle+(yaw_factor*dtime),pa28.rudder_limit)
 	end
+end
+
+function pa28.set_yaw_by_mouse(self, dir)
+    local rotation = self.object:get_rotation()
+    local rot_y = math.deg(rotation.y)
+    
+    local total = math.abs(math.floor(rot_y/360))
+
+    if rot_y < 0 then rot_y = rot_y + (360*total) end
+    if rot_y > 360 then rot_y = rot_y - (360*total) end
+
+    local command = rot_y - dir
+    if command < -180 then command = command + 360 
+    elseif command > 180 then command = command - 360 end
+    --minetest.chat_send_all("rotation y: "..rot_y.." - dir: "..dir.." - command: "..command)
+    
+    if command > 80 then command = 80 end
+    if command < -80 then command = -80 end
+
+    --minetest.chat_send_all("rotation y: "..rot_y.." - dir: "..dir.." - command: "..command)
+
+	self._rudder_angle = (-command * pa28.rudder_limit)/90
 end
 
 function pa28.rudder_auto_correction(self, longit_speed, dtime)
@@ -184,21 +214,6 @@ function pa28.rudder_auto_correction(self, longit_speed, dtime)
         self._rudder_angle = 0
     else
         self._rudder_angle = new_rudder_angle
-    end
-end
-
-function pa28.elevator_auto_correction(self, longit_speed, dtime)
-    if longit_speed <= 0 then return end
-    local factor = 1
-    --if self._elevator_angle > -1.5 then factor = -1 end --here is the "compensator" adjusto to keep it stable
-    if self._elevator_angle > 0 then factor = -1 end
-    local correction = (pa28.elevator_limit*(longit_speed/5000)) * factor * (dtime/pa28.ideal_step)
-    local before_correction = self._elevator_angle
-    local new_elevator_angle = self._elevator_angle + correction
-    if math.sign(before_correction) ~= math.sign(new_elevator_angle) then
-        self._elevator_angle = 0
-    else
-        self._elevator_angle = new_elevator_angle
     end
 end
 
@@ -256,7 +271,9 @@ function pa28.autopilot(self, dtime, hull_direction, longit_speed, accel, curr_p
 
     if longit_speed > 0 then
         pa28.rudder_auto_correction(self, longit_speed, dtime)
-        pa28.elevator_auto_correction(self, longit_speed, dtime)
+        if airutils.elevator_auto_correction then
+            self._elevator_angle = airutils.elevator_auto_correction(self, longit_speed, self.dtime, pa28.max_speed, self._elevator_angle, pa28.elevator_limit, pa28.ideal_step)
+        end
     end
 
     return retval_accel
