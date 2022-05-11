@@ -611,8 +611,6 @@ function pa28.flightstep(self)
         end
     end
 
-    --minetest.chat_send_all(self._angle_of_attack)
-
     -- pitch
     local newpitch = math.rad(0)
     if airutils.get_plane_pitch then
