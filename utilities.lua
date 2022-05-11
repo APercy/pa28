@@ -604,6 +604,11 @@ function pa28.flightstep(self)
             self._angle_of_attack = 20
             self._elevator_angle = self._elevator_angle + 0.1
         end --limiting the very high climb angle due to strange behavior]]--
+
+        --set the plane on level
+        if airutils.adjust_attack_angle_by_speed then
+            self._angle_of_attack = airutils.adjust_attack_angle_by_speed(self._angle_of_attack, 1, 5, 45, longit_speed, pa28.ideal_step, self.dtime)
+        end
     end
 
     --minetest.chat_send_all(self._angle_of_attack)
@@ -792,7 +797,7 @@ function pa28.flightstep(self)
     end
 
     --is an stall, force a recover
-    if longit_speed < (pa28.min_speed / 2) and climb_rate < -3 and is_flying then
+    if longit_speed < (pa28.min_speed) and climb_rate < -3 and is_flying then
         self._elevator_angle = 0
         self._angle_of_attack = -2
         newpitch = math.rad(self._angle_of_attack)
