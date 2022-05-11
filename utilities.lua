@@ -609,9 +609,14 @@ function pa28.flightstep(self)
     --minetest.chat_send_all(self._angle_of_attack)
 
     -- pitch
-    local speed_factor = 0
-    if longit_speed > pa28.min_speed then speed_factor = (velocity.y * math.rad(1)) end
-    local newpitch = math.rad(self._angle_of_attack) + speed_factor
+    local newpitch = math.rad(0)
+    if airutils.get_plane_pitch then
+        newpitch = airutils.get_plane_pitch(velocity, longit_speed, pa28.min_speed, self._angle_of_attack)
+    else
+        local speed_factor = 0
+        if longit_speed > pa28.min_speed then speed_factor = (velocity.y * math.rad(1)) end
+        newpitch = math.rad(self._angle_of_attack) + speed_factor
+    end
 
     -- adjust pitch at ground
     if is_flying == false then
