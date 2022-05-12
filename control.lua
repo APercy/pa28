@@ -151,7 +151,7 @@ function pa28.control(self, dtime, hull_direction, longit_speed, longit_drag,
             pa28.rudder_auto_correction(self, longit_speed, dtime)
         end
         if airutils.elevator_auto_correction then
-            self._elevator_angle = airutils.elevator_auto_correction(self, longit_speed, self.dtime, pa28.max_speed, self._elevator_angle, pa28.elevator_limit, pa28.ideal_step, 1000)
+            self._elevator_angle = airutils.elevator_auto_correction(self, longit_speed, self.dtime, pa28.max_speed, self._elevator_angle, pa28.elevator_limit, pa28.ideal_step, 2000)
         end
     end
 
