@@ -354,7 +354,7 @@ function pa28.testDamage(self, velocity, position)
 end
 
 function pa28.checkattachBug(self)
-    -- for some engine error the player can be detached from the submarine, so lets set him attached again
+    -- for some engine error the player can be detached from the plane, so lets set him attached again
     if self.owner and self.driver_name then
         -- attach the driver again
         local player = minetest.get_player_by_name(self.owner)
