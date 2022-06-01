@@ -74,34 +74,36 @@ function pa28.physics(self)
         --self.object:set_velocity(new_velocity)
 	end
 
-    new_velocity = vector.add(new_velocity, vector.multiply(self._last_accell, self.dtime))
-    
-    --[[
-    new_velocity correction
-    under some circunstances the velocity exceeds the max value accepted by set_velocity and
-    the game crashes with an overflow, so limiting the max velocity in each axis prevents the crash
-    ]]--
-    local max_factor = 55
-    local vel_adjusted = 40
-    if new_velocity.x > max_factor then new_velocity.x = vel_adjusted end
-    if new_velocity.x < -max_factor then new_velocity.x = -vel_adjusted end
-    if new_velocity.z > max_factor then new_velocity.z = vel_adjusted end
-    if new_velocity.z < -max_factor then new_velocity.z = -vel_adjusted end
-    if new_velocity.y > max_factor then new_velocity.y = vel_adjusted end
-    if new_velocity.y < -max_factor then new_velocity.y = -vel_adjusted end
-    -- end correction
+    if new_velocity then
+        new_velocity = vector.add(new_velocity, vector.multiply(self._last_accell, self.dtime))
+        
+        --[[
+        new_velocity correction
+        under some circunstances the velocity exceeds the max value accepted by set_velocity and
+        the game crashes with an overflow, so limiting the max velocity in each axis prevents the crash
+        ]]--
+        local max_factor = 55
+        local vel_adjusted = 40
+        if new_velocity.x > max_factor then new_velocity.x = vel_adjusted end
+        if new_velocity.x < -max_factor then new_velocity.x = -vel_adjusted end
+        if new_velocity.z > max_factor then new_velocity.z = vel_adjusted end
+        if new_velocity.z < -max_factor then new_velocity.z = -vel_adjusted end
+        if new_velocity.y > max_factor then new_velocity.y = vel_adjusted end
+        if new_velocity.y < -max_factor then new_velocity.y = -vel_adjusted end
+        -- end correction
 
-    self.object:set_pos(self.object:get_pos())
-		-- dumb friction
-	if self.isonground and not self.isinliquid then
-		self.object:set_velocity({x=new_velocity.x*friction,
-								y=new_velocity.y,
-								z=new_velocity.z*friction})
-    else
-        if pa28.mode == 1 then
-            self.object:set_velocity(new_velocity)
-        end
-	end
+        self.object:set_pos(self.object:get_pos())
+		    -- dumb friction
+	    if self.isonground and not self.isinliquid then
+		    self.object:set_velocity({x=new_velocity.x*friction,
+								    y=new_velocity.y,
+								    z=new_velocity.z*friction})
+        else
+            if pa28.mode == 1 then
+                self.object:set_velocity(new_velocity)
+            end
+	    end
+    end
 
     if pa28.mode == 2 then
         self.object:set_acceleration({x=0,y=airutils.gravity,z=0})
