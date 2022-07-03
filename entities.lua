@@ -208,6 +208,7 @@ minetest.register_entity("pa28:pa28", {
 
 	on_deactivate = function(self)
         airutils.save_inventory(self)
+        minetest.sound_stop(self.sound_handle)
 	end,
 
 	on_activate = function(self, staticdata, dtime_s)
@@ -286,6 +287,7 @@ minetest.register_entity("pa28:pa28", {
 		else
 		    self.inv = inv
         end
+        if self._engine_running then pa28.engineSoundPlay(self) end
 	end,
 
     --on_step = airutils.stepfunc,
