@@ -37,7 +37,7 @@ function pa28.consumptionCalc(self, accel)
     if accel == nil then return end
     if self._energy > 0 and self._engine_running and accel ~= nil then
         local consumed_power = self._power_lever/400000
-        if consumed_power < 0.000001 then consumed_power = 0.000001 end
+        consumed_power = math.max(consumed_power, 0.000001)
         --minetest.chat_send_all('consumed: '.. consumed_power)
         self._energy = self._energy - consumed_power;
     end

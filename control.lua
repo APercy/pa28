@@ -190,12 +190,12 @@ function pa28.set_yaw_by_mouse(self, dir)
 
     if rot_y < 0 then rot_y = rot_y + (360*total) end
     if rot_y > 360 then rot_y = rot_y - (360*total) end
+    rot_y = math.fmod(rot_y, 360)
     if rot_y >= 270 and dir <= 90 then dir = dir + 360 end
     if rot_y <= 90 and dir >= 270 then dir = dir - 360 end
 
-    local command = (rot_y - dir)
-    if command < -90 then command = -90 
-    elseif command > 90 then command = 90 end
+    local command = rot_y - dir
+    command = math.max(-90,  math.min(command, 90))
     --minetest.chat_send_all("rotation y: "..rot_y.." - dir: "..dir.." - command: "..(rot_y - dir))
 
     --minetest.chat_send_all("rotation y: "..rot_y.." - dir: "..dir.." - command: "..command)
