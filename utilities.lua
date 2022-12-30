@@ -54,7 +54,6 @@ function pa28.attach(self, player, instructor_mode)
         if player then
             --minetest.chat_send_all("okay")
             airutils.sit(player)
-            if emote then emote.start(player:get_player_name(), "sit") end
             --apply_physics_override(player, {speed=0,gravity=0,jump=0})
         end
     end)
@@ -100,7 +99,6 @@ function pa28.attach_pax(self, player, is_copilot)
                 player = minetest.get_player_by_name(name)
                 if player then
                     airutils.sit(player)
-                    if emote then emote.start(player:get_player_name(), "sit") end
                     --apply_physics_override(player, {speed=0,gravity=0,jump=0})
                 end
             end)
@@ -133,7 +131,6 @@ function pa28.attach_pax(self, player, is_copilot)
                     player = minetest.get_player_by_name(name)
                     if player then
                         airutils.sit(player)
-                        if emote then emote.start(player:get_player_name(), "sit") end
                         --apply_physics_override(player, {speed=0,gravity=0,jump=0})
                     end
                 end)
