@@ -25,6 +25,7 @@ function pa28.get_gauge_angle(value, initial_angle)
 	return angle
 end
 
+
 -- attach player
 function pa28.attach(self, player, instructor_mode)
     instructor_mode = instructor_mode or false
@@ -53,6 +54,7 @@ function pa28.attach(self, player, instructor_mode)
         if player then
             --minetest.chat_send_all("okay")
             airutils.sit(player)
+            if emote then emote.start(player:get_player_name(), "sit") end
             --apply_physics_override(player, {speed=0,gravity=0,jump=0})
         end
     end)
@@ -98,6 +100,7 @@ function pa28.attach_pax(self, player, is_copilot)
                 player = minetest.get_player_by_name(name)
                 if player then
                     airutils.sit(player)
+                    if emote then emote.start(player:get_player_name(), "sit") end
                     --apply_physics_override(player, {speed=0,gravity=0,jump=0})
                 end
             end)
@@ -130,6 +133,7 @@ function pa28.attach_pax(self, player, is_copilot)
                     player = minetest.get_player_by_name(name)
                     if player then
                         airutils.sit(player)
+                        if emote then emote.start(player:get_player_name(), "sit") end
                         --apply_physics_override(player, {speed=0,gravity=0,jump=0})
                     end
                 end)
@@ -169,20 +173,20 @@ end
 function pa28.dettachPlayer(self, player)
     local name = self.driver_name
     airutils.setText(self, pa28.plane_text)
-
-    pa28.remove_hud(player)
-
-    --self._engine_running = false
-
     -- driver clicked the object => driver gets off the vehicle
     self.driver_name = nil
+    --self._engine_running = false
 
-    -- detach the player
-    --player:set_physics_override({speed = 1, jump = 1, gravity = 1, sneak = true})
-    player:set_detach()
-    player_api.player_attached[name] = nil
-    player:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
-    player_api.set_animation(player, "stand")
+    if player then
+        pa28.remove_hud(player)
+
+        -- detach the player
+        --player:set_physics_override({speed = 1, jump = 1, gravity = 1, sneak = true})
+        player:set_detach()
+        player_api.player_attached[name] = nil
+        player:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
+        player_api.set_animation(player, "stand")
+    end
     self.driver = nil
     --remove_physics_override(player, {speed=1,gravity=1,jump=1})
 end
