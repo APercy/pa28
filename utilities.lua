@@ -795,9 +795,13 @@ function pa28.flightstep(self)
     end
 
     --is an stall, force a recover
-    if longit_speed < (pa28.min_speed) and climb_rate < -3 and is_flying then
+    --minetest.chat_send_all("speed: "..longit_speed.." - min: "..pa28.min_speed.." - climb: "..climb_rate)
+    if longit_speed < (pa28.min_speed+1) and climb_rate < -1.5 and is_flying then
+        if player and self.driver_name then
+            minetest.chat_send_player(self.driver_name,core.colorize('#ff0000', " >>> STALL"))
+        end
         self._elevator_angle = 0
-        self._angle_of_attack = -2
+        self._angle_of_attack = -1
         newpitch = math.rad(self._angle_of_attack)
     end
 
