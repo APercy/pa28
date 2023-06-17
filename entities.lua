@@ -325,6 +325,10 @@ minetest.register_entity("pa28:pa28", {
     logic = pa28.flightstep,
 
 	on_punch = function(self, puncher, ttime, toolcaps, dir, damage)
+        if self.hp_max <= 0 then
+            pa28.destroy(self)
+        end
+
 		if not puncher or not puncher:is_player() then
 			return
 		end
