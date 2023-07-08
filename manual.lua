@@ -37,8 +37,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                 "* Left/right: Turn to left/right, work on and out ground. \n",
                 "* Left and Right together: center all commands \n",
                 "* Sneak and Jump together: activates the autopilot \n",
-                "* Aux1 (E) and Jump together: give/take the \n",
-                "      controls to/from copilot \n",
                 "* Up and Down together: enable/disable mouse control \n",
                 "* E and Right click: inventory (only external) \n"
 			}
