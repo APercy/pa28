@@ -162,6 +162,7 @@ pa28.plane_properties = {
     springiness = 0.1,
     buoyancy = 1.02,
     physics = airutils.physics,
+    _vehicle_name = "PA-28",
     _seats = {{x=-4.25,y=-4,z=2},{x=4.25,y=-4,z=2},{x=-4.25,y=-4.5,z=-6},{x=4.25,y=-4.5,z=-6},},
     _seats_rot = {0, 0, 0, 0},  --necessary when using reversed seats
     _have_copilot = true, --wil use the second position of the _seats list
