@@ -42,7 +42,7 @@ minetest.register_entity('pa28:p_lights',{
 	    visual = "mesh",
 	    mesh = "pa28_lights.b3d",
         textures = {
-                        "pa28_l_light.png", --luz posicao
+                        "pa28_white.png", --luz posicao
                         "pa28_l_light.png", --luz posicao esq
                         "pa28_r_light.png", --luz posicao dir
             },

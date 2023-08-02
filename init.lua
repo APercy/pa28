@@ -55,9 +55,12 @@ end
 function pa28.step_additional_function(self)
     --position lights
     if self._engine_running == true then
-        self.lights:set_properties({textures={"pa28_l_light.png^pa28_l_light.png","pa28_l_light.png","pa28_r_light.png"},glow=15})
+        local current_glow = self.lights:get_properties().glow
+        minetest.after(1, function()
+        self.lights:set_properties({textures={"pa28_white.png^pa28_white.png","pa28_l_light.png","pa28_r_light.png"},glow=15-current_glow})
+        end)
     else
-        self.lights:set_properties({textures={"pa28_l_light.png","pa28_l_light.png","pa28_r_light.png"},glow=0})
+        self.lights:set_properties({textures={"pa28_white.png","pa28_l_light.png","pa28_r_light.png"},glow=0})
     end
 
     if self._land_light == true then
